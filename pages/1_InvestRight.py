@@ -19,9 +19,9 @@ import plotly.graph_objects as go
 # Streamlit app to be full screen
 # st.set_page_config(layout="wide")
 
-# nltk.download('punkt')
-# nltk.download('stopwords')
-# nltk.download('wordnet')
+nltk.download('punkt')
+nltk.download('stopwords')
+nltk.download('wordnet')
 
 
 today = date.today()
@@ -335,13 +335,14 @@ if filterdata:
 
             # Get the sentiment label for the mean rating
             mean_sentiment = sentiment_labels.get(int(mean_ratingrounded))
-            st.metric(label="Actual Rating Mean(1-5)", value=round(actual_mean, 2))
+            st.metric(label="Actual Rating Mean(1-5)",
+                      value=round(actual_mean, 2))
             st.metric(label="Mean Sentiment Rating (1-5)",
-                    value=round(mean_rating, 2))
+                      value=round(mean_rating, 2))
             st.metric(label="Sentiment of Reviews in Selected Timeframe",
-                    value=mean_sentiment)
+                      value=mean_sentiment)
             st.metric(label="Average Review Length in Selected Timeframe",
-                    value=round(mean_length, 2))
+                      value=round(mean_length, 2))
             ########   Sentiment Analysis End   ##############
     else:
         st.warning(
