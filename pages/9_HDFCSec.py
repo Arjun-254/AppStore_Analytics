@@ -1,7 +1,7 @@
 from google_play_scraper import app, Sort, reviews, reviews_all
 import pandas as pd
 import numpy as np
-from datetime import date
+from datetime import date, datetime
 import matplotlib.pyplot as plt
 import seaborn as sns
 import nltk
@@ -36,8 +36,12 @@ st.markdown('<h1 style="font-size: 70px; color: #9347ED;">Customer Review Analyt
 # Analytics date window wise
 st.title('Custom Search by Date Range')
 pd.set_option('display.width', 1000)
-start_date = st.date_input('Select start date')
-end_date = st.date_input('Select end date')
+start_date = st.date_input('Select start date', value=date(2023, 1, 1), min_value=date(
+    2023, 1, 1), max_value=date(
+    2023, 7, 3))
+end_date = st.date_input('Select end date', value=date(2023, 1, 1), min_value=date(
+    2023, 1, 1), max_value=date(
+    2023, 7, 3))
 start_date = pd.to_datetime(start_date)
 end_date = pd.to_datetime(end_date)
 df['review_date'] = pd.to_datetime(df['review_date'])
@@ -59,7 +63,7 @@ selected_version = st.selectbox('Select a Version:', unique_versions.tolist())
 # filterdata = st.checkbox('Filter reviews')
 filterdata = st.button('Filter reviews')
 
-if filterdata:
+if filterdata and not df.empty:
     toggle = st.radio('Select Visualization', [
                       'Rating Histogram', 'Rating Pie'])
     ratings = df['rating'].value_counts().sort_index()
@@ -71,7 +75,8 @@ if filterdata:
             yaxis=dict(fixedrange=True)
         )
         st.title('Review Counts by Star Rating')
-        st.plotly_chart(fig, config={'displayModeBar': False})
+        st.plotly_chart(
+            fig, config={'displayModeBar': False}, use_container_width=True)
 
     else:
         # Rating Pie
@@ -105,7 +110,8 @@ if filterdata:
         yaxis=dict(title='Review Count'),
         barmode='relative'
     )
-    st.plotly_chart(fig, config={'displayModeBar': False})
+    st.plotly_chart(
+        fig, config={'displayModeBar': False}, use_container_width=True)
 
     # version release
     dfversion = dfversion.sort_values('appVersion', ascending=False)
@@ -311,3 +317,6 @@ if filterdata:
     else:
         st.warning(
             "Please select a different date range to filter the reviews (Not enough data for analysis)")
+else:
+    st.warning(
+        "Please select a different date range to filter the reviews (Not enough data for analysis)")
