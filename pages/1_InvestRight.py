@@ -3,8 +3,6 @@ from google_play_scraper import app, Sort, reviews_all
 import pandas as pd
 import numpy as np
 from datetime import date, datetime, timedelta
-import matplotlib.pyplot as plt
-import seaborn as sns
 import nltk
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
@@ -91,9 +89,9 @@ if 'version' not in st.session_state:
 st.title('Custom Search by Date Range')
 pd.set_option('display.width', 1000)
 start_date = st.date_input('Select start date', value=st.session_state['start_date'], min_value=date(
-    2023, 1, 1), max_value=date(2023, 7, 3))
+    2023, 1, 1), max_value=datetime.now().date())
 end_date = st.date_input('Select end date', value=st.session_state['end_date'], min_value=date(
-    2023, 1, 1), max_value=date(2023, 7, 3))
+    2023, 1, 1), max_value=datetime.now().date())
 start_date = pd.to_datetime(start_date)
 end_date = pd.to_datetime(end_date)
 df['review_date'] = pd.to_datetime(df['review_date'])
@@ -343,12 +341,15 @@ if st.session_state['filter_pressed']:
                 'nlptown/bert-base-multilingual-uncased-sentiment')
             model = AutoModelForSequenceClassification.from_pretrained(
                 'nlptown/bert-base-multilingual-uncased-sentiment')
+            quantized_model = torch.quantization.quantize_dynamic(
+                model, {torch.nn.Linear}, dtype=torch.qint8)
+            del model
 
             ratings = []
             review_lengths = []
             for val in df['review_description']:
                 tokens = tokenizer.encode(val, return_tensors='pt')
-                result = model(tokens)
+                result = quantized_model(tokens)
                 rating = int(torch.argmax(result.logits))+1
                 ratings.append(rating)
                 review_lengths.append(len(tokens[0]))

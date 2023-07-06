@@ -2,8 +2,6 @@ from google_play_scraper import app, Sort, reviews, reviews_all
 import pandas as pd
 import numpy as np
 from datetime import date, datetime
-import matplotlib.pyplot as plt
-import seaborn as sns
 import nltk
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
