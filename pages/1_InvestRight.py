@@ -107,7 +107,8 @@ if filterdata and not df.empty:
             yaxis=dict(fixedrange=True)
         )
         st.title('Review Counts by Star Rating')
-        st.plotly_chart(fig, config={'displayModeBar': False})
+        st.plotly_chart(
+            fig, config={'displayModeBar': False}, use_container_width=True)
 
     else:
         # Rating Pie
@@ -141,7 +142,8 @@ if filterdata and not df.empty:
         yaxis=dict(title='Review Count'),
         barmode='relative'
     )
-    st.plotly_chart(fig, config={'displayModeBar': False})
+    st.plotly_chart(
+        fig, config={'displayModeBar': False}, use_container_width=True)
 
     # version release
     dfversion = dfversion.sort_values('appVersion', ascending=False)
