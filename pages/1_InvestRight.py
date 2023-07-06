@@ -17,9 +17,9 @@ import plotly.graph_objects as go
 # Streamlit app to be full screen
 # st.set_page_config(layout="wide")
 
-nltk.download('punkt')
-nltk.download('stopwords')
-nltk.download('wordnet')
+# nltk.download('punkt')
+# nltk.download('stopwords')
+# nltk.download('wordnet')
 
 
 today = date.today()
