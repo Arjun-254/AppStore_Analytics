@@ -32,22 +32,39 @@ st.markdown('<h1 style="font-size: 70px; color: #E3142D;"> IIFL </h1>',
 st.markdown('<h1 style="font-size: 70px; color: #9347ED;">Customer Review Analytics </h1>',
             unsafe_allow_html=True)
 
+if 'filter_pressed' not in st.session_state:
+    st.session_state['filter_pressed'] = False
+
+# Check if the start_date key exists in session_state, if not initialize it
+if 'start_date' not in st.session_state:
+    st.session_state['start_date'] = date(2023, 1, 1)
+
+# Check if the end_date key exists in session_state, if not initialize it
+if 'end_date' not in st.session_state:
+    st.session_state['end_date'] = date(2023, 1, 1)
+
+# Check if the rating_filter key exists in session_state, if not initialize it
+if 'rating_filter' not in st.session_state:
+    st.session_state['rating_filter'] = "All"
+
+# Check if the version key exists in session_state, if not initialize it
+if 'version' not in st.session_state:
+    st.session_state['version'] = "All"
+
 # Analytics date window wise
 st.title('Custom Search by Date Range')
 pd.set_option('display.width', 1000)
-start_date = st.date_input('Select start date', value=date(2023, 1, 1), min_value=date(
-    2023, 1, 1), max_value=date(
-    2023, 7, 3))
-end_date = st.date_input('Select end date', value=date(2023, 1, 1), min_value=date(
-    2023, 1, 1), max_value=date(
-    2023, 7, 3))
+start_date = st.date_input('Select start date', value=st.session_state['start_date'], min_value=date(
+    2023, 1, 1), max_value=date(2023, 7, 3))
+end_date = st.date_input('Select end date', value=st.session_state['end_date'], min_value=date(
+    2023, 1, 1), max_value=date(2023, 7, 3))
 start_date = pd.to_datetime(start_date)
 end_date = pd.to_datetime(end_date)
 df['review_date'] = pd.to_datetime(df['review_date'])
 dfsearch = df  # to search(full data)
 df = df[(df['review_date'] >= start_date) & (df['review_date'] <= end_date)]
-rating_options = st.radio("Select Rating Filter", [
-                          "All", "4 and below", "5 only"])
+rating_options = st.radio("Select Rating Filter", ["All", "4 and below", "5 only"], index=[
+                          "All", "4 and below", "5 only"].index(st.session_state['rating_filter']))
 
 # App Version Filter
 df_cleaned = df.dropna(subset=['appVersion'])
@@ -58,11 +75,20 @@ if len(unique_versions) > 0:
     unique_versions = pd.Series(unique_versions.tolist() + ["All"])
 selected_version = st.selectbox('Select a Version:', unique_versions.tolist())
 
-# Only perform analytics once date range provided(Async-Await type but very dumbed down)
-# filterdata = st.checkbox('Filter reviews')
-filterdata = st.button('Filter reviews')
+filter_button = st.button('Filter reviews')
 
-if filterdata and not df.empty:
+# Check if the button is pressed and the dataframe is not empty
+if filter_button and not df.empty:
+    st.session_state['filter_pressed'] = True
+
+# Save the states of the filters
+st.session_state['start_date'] = start_date
+st.session_state['end_date'] = end_date
+st.session_state['rating_filter'] = rating_options
+st.session_state['version'] = selected_version
+
+# Use the filter state in your application
+if st.session_state['filter_pressed']:
     toggle = st.radio('Select Visualization', [
                       'Rating Histogram', 'Rating Pie'])
     ratings = df['rating'].value_counts().sort_index()
