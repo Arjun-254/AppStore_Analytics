@@ -6,13 +6,13 @@ st.set_page_config(
     page_icon="📊",
 )
 
-st.write("Analytics Dashboard 👋")
+st.title("Analytics Dashboard 👋")
 
 st.sidebar.success("Select an option above.")
 
-st.markdown(
+st.info(
     """
     Investright is updated Real-Time, other apps are
-    updated till July 3rd,2023.
+    updated till July 3rd,2023.Data starts from January 1st,2023.
 """
 )

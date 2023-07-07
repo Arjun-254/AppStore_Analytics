@@ -24,16 +24,16 @@ nltk.download('wordnet')
 
 today = date.today()
 try:
-    g_reviews = joblib.load(f"cached_reviews_{today}.pkl")
+    g_reviews = joblib.load(f"cached_reviewsSKY_{today}.pkl")
 except FileNotFoundError:
     g_reviews = reviews_all(
-        "com.hsl.investright",
+        "com.cloudtradetech.sky",
         sleep_milliseconds=0,  # defaults to 0
         lang='en',  # defaults to 'en'
         country='us',  # defaults to 'us'
         sort=Sort.NEWEST,  # defaults to Sort.NEWEST
     )
-    joblib.dump(g_reviews, f"cached_reviews_{today}.pkl")
+    joblib.dump(g_reviews, f"cached_reviewsSKY_{today}.pkl")
 
 
 g_df = pd.DataFrame(np.array(g_reviews), columns=['review'])
@@ -60,7 +60,7 @@ dfversion['review_date'] = pd.to_datetime(
     dfversion['review_date']).dt.strftime('%d/%m/%Y')
 
 
-st.markdown('<h1 style="font-size: 70px; color: #1C4CD6;"> InvestRight </h1>',
+st.markdown('<h1 style="font-size: 70px; color: #1C4CD6;"> HDFC SKY </h1>',
             unsafe_allow_html=True)
 st.markdown('<h1 style="font-size: 70px; color: #9347ED;">Customer Review Analytics</h1>',
             unsafe_allow_html=True)
@@ -77,11 +77,11 @@ if 'filter_pressed' not in st.session_state:
 
 # Check if the start_date key exists in session_state, if not initialize it
 if 'start_date' not in st.session_state:
-    st.session_state['start_date'] = date(2023, 1, 23)
+    st.session_state['start_date'] = date(2023, 7, 1)
 
 # Check if the end_date key exists in session_state, if not initialize it
 if 'end_date' not in st.session_state:
-    st.session_state['end_date'] = date(2023, 1, 23)
+    st.session_state['end_date'] = date(2023, 7, 1)
 
 # Check if the rating_filter key exists in session_state, if not initialize it
 if 'rating_filter' not in st.session_state:
