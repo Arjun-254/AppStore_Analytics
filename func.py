@@ -24,6 +24,8 @@ def analyze_reviews(csv_file, custom_stop_words):
     dfversion['review_date'] = pd.to_datetime(
         dfversion['review_date']).dt.strftime('%d/%m/%Y')
 
+    st.session_state['run_Model'] = False
+
     if 'filter_pressed' not in st.session_state:
         st.session_state['filter_pressed'] = False
 
@@ -291,49 +293,62 @@ def analyze_reviews(csv_file, custom_stop_words):
             selected_reviews = dfsearch[dfsearch['review_description'].str.contains(
                 search_word, case=True)]
             st.dataframe(selected_reviews)
-            with st.spinner("Loading Sentiment Analysis"):
-                ########   Sentiment Analysis Start   ##############
-                from transformers import AutoTokenizer, AutoModelForSequenceClassification
-                import torch
 
-                tokenizer = AutoTokenizer.from_pretrained(
-                    'nlptown/bert-base-multilingual-uncased-sentiment')
-                model = AutoModelForSequenceClassification.from_pretrained(
-                    'nlptown/bert-base-multilingual-uncased-sentiment')
+            ########   Sentiment Analysis Start   ##############
+            if st.button('Run Sentiment Analytics'):
+                st.session_state['run_Model'] = True
 
-                ratings = []
-                review_lengths = []
-                for val in df['review_description']:
-                    tokens = tokenizer.encode(val, return_tensors='pt')
-                    result = model(tokens)
-                    rating = int(torch.argmax(result.logits))+1
-                    ratings.append(rating)
-                    review_lengths.append(len(tokens[0]))
+            if st.session_state['run_Model']:
+                with st.spinner("Loading Sentiment Analysis"):
+                    from transformers import AutoTokenizer, AutoModelForSequenceClassification
+                    import torch
 
-                mean_length = np.mean(review_lengths)
-                mean_rating = np.mean(ratings)
-                mean_ratingrounded = np.round_(mean_rating)
-                actual_mean = df['rating'].mean()
+                    tokenizer = AutoTokenizer.from_pretrained(
+                        'nlptown/bert-base-multilingual-uncased-sentiment')
 
-                sentiment_labels = {
-                    1: "Very Unsatisfied",
-                    2: "Unsatisfied",
-                    3: "Neutral",
-                    4: "Satisfied",
-                    5: "Very Satisfied"
-                }
+                    @st.cache_resource  # 👈 Add the caching decorator
+                    def load_model():
+                        model = AutoModelForSequenceClassification.from_pretrained(
+                            'nlptown/bert-base-multilingual-uncased-sentiment')
+                        return model
 
-                # Get the sentiment label for the mean rating
-                mean_sentiment = sentiment_labels.get(int(mean_ratingrounded))
-                st.metric(label="Actual Rating Mean(1-5)",
-                          value=round(actual_mean, 2))
-                st.metric(label="Mean Sentiment Rating (1-5)",
-                          value=round(mean_rating, 2))
-                st.metric(label="Sentiment of Reviews in Selected Timeframe",
-                          value=mean_sentiment)
-                st.metric(label="Average Review Length in Selected Timeframe",
-                          value=round(mean_length, 2))
-                ########   Sentiment Analysis End   ##############
+                    model = load_model()
+
+                    ratings = []
+                    review_lengths = []
+                    for val in df['review_description']:
+                        tokens = tokenizer.encode(val, return_tensors='pt')
+                        result = model(tokens)
+                        rating = int(torch.argmax(result.logits))+1
+                        ratings.append(rating)
+                        review_lengths.append(len(tokens[0]))
+
+                    mean_length = np.mean(review_lengths)
+                    mean_rating = np.mean(ratings)
+                    mean_ratingrounded = np.round_(mean_rating)
+                    actual_mean = df['rating'].mean()
+
+                    sentiment_labels = {
+                        1: "Very Unsatisfied",
+                        2: "Unsatisfied",
+                        3: "Neutral",
+                        4: "Satisfied",
+                        5: "Very Satisfied"
+                    }
+
+                    # Get the sentiment label for the mean rating
+                    mean_sentiment = sentiment_labels.get(
+                        int(mean_ratingrounded))
+                    st.metric(label="Actual Rating Mean(1-5)",
+                              value=round(actual_mean, 2))
+                    st.metric(label="Mean Sentiment Rating (1-5)",
+                              value=round(mean_rating, 2))
+                    st.metric(label="Sentiment of Reviews in Selected Timeframe",
+                              value=mean_sentiment)
+                    st.metric(label="Average Review Length in Selected Timeframe",
+                              value=round(mean_length, 2))
+                    ########   Sentiment Analysis End   ##############
+            del df_cleaned, unique_versions, words, cleaned_words, bow, bow2, bow3, word_freq, word_pairs, trigrams
         else:
             st.warning(
                 "Please select a different date range to filter the reviews (Not enough data for analysis)")
