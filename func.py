@@ -71,9 +71,9 @@ def analyze_reviews(csv_file, custom_stop_words):
     unique_versions.append("All")
     unique_versions = df_cleaned['appVersion'].drop_duplicates()
     if len(unique_versions) > 0:
-        unique_versions = pd.Series(unique_versions.tolist() + ["All"])
+        unique_versions = pd.Series(["All"]+unique_versions.tolist())
     selected_version = st.selectbox(
-        'Select a Version:', unique_versions.tolist())
+        'Select a Version:', unique_versions.tolist(), index=0)
 
     filter_button = st.button('Filter reviews')
 
