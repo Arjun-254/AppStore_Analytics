@@ -15,6 +15,10 @@ import plotly.graph_objects as go
 
 
 def analyze_reviews(csv_file, custom_stop_words):
+    nltk.download('punkt')
+    nltk.download('stopwords')
+    nltk.download('wordnet')
+
     df = pd.read_csv(csv_file)
     df.drop(columns=['Unnamed: 0'], inplace=True)
 
