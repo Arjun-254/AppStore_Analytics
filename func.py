@@ -74,6 +74,10 @@ def analyze_reviews(csv_file, custom_stop_words):
     rating_options = st.radio("Select Rating Filter", ["All", "4 and below", "5 only"], index=[
         "All", "4 and below", "5 only"].index(st.session_state['rating_filter']))
 
+    # Date Delta
+    delta = end_date-start_date
+    day_interval = delta.days+1
+
     # App Version Filter
     df_cleaned = df.dropna(subset=['appVersion'])
     unique_versions = df_cleaned['appVersion'].drop_duplicates().tolist()
@@ -311,7 +315,7 @@ def analyze_reviews(csv_file, custom_stop_words):
             if st.button('Run Sentiment Analytics'):
                 st.session_state['run_Model'] = True
 
-            if st.session_state['run_Model']:
+            if st.session_state['run_Model'] and (day_interval <= 7):
                 with st.spinner("Loading Sentiment Analysis"):
                     from transformers import AutoTokenizer, AutoModelForSequenceClassification
                     import torch
@@ -355,6 +359,10 @@ def analyze_reviews(csv_file, custom_stop_words):
                     st.metric(label="Average Review Length in Selected Timeframe",
                               value=round(mean_length, 2))
                     ########   Sentiment Analysis End   ##############
+            elif st.session_state['run_Model'] and (day_interval > 7):
+                st.warning(
+                    "Sentiment analysis can only be calculated for a time interval of 7 days.")
+
             del df_cleaned, unique_versions, words, cleaned_words, bow, bow2, bow3, word_freq, word_pairs, trigrams
         else:
             st.warning(

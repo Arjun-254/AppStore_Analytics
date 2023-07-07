@@ -73,11 +73,11 @@ if 'filter_pressed' not in st.session_state:
 
 # Check if the start_date key exists in session_state, if not initialize it
 if 'start_date' not in st.session_state:
-    st.session_state['start_date'] = date(2023, 1, 1)
+    st.session_state['start_date'] = date(2023, 1, 23)
 
 # Check if the end_date key exists in session_state, if not initialize it
 if 'end_date' not in st.session_state:
-    st.session_state['end_date'] = date(2023, 1, 1)
+    st.session_state['end_date'] = date(2023, 1, 23)
 
 # Check if the rating_filter key exists in session_state, if not initialize it
 if 'rating_filter' not in st.session_state:
@@ -101,6 +101,10 @@ dfsearch = df  # to search(full data)
 df = df[(df['review_date'] >= start_date) & (df['review_date'] <= end_date)]
 rating_options = st.radio("Select Rating Filter", ["All", "4 and below", "5 only"], index=[
                           "All", "4 and below", "5 only"].index(st.session_state['rating_filter']))
+
+# Date Delta
+delta = end_date-start_date
+day_interval = delta.days+1
 
 # App Version Filter
 df_cleaned = df.dropna(subset=['appVersion'])
@@ -340,7 +344,7 @@ if st.session_state['filter_pressed']:
         if st.button('Run Sentiment Analytics'):
             st.session_state['run_Model'] = True
 
-        if st.session_state['run_Model']:
+        if st.session_state['run_Model'] and (day_interval <= 7):
             with st.spinner("Loading Sentiment Analysis"):
                 from transformers import AutoTokenizer, AutoModelForSequenceClassification
                 import torch
@@ -383,6 +387,9 @@ if st.session_state['filter_pressed']:
                 st.metric(label="Average Review Length in Selected Timeframe",
                           value=round(mean_length, 2))
                 ########   Sentiment Analysis End   ##############
+        elif st.session_state['run_Model'] and (day_interval > 7):
+            st.warning(
+                "Sentiment analysis can only be calculated for a time interval of 7 days.")
     else:
         st.warning(
             "Please select a different date range to filter the reviews (Not enough data for analysis)")
