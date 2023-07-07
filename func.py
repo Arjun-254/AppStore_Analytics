@@ -15,6 +15,14 @@ import plotly.graph_objects as go
 
 
 def analyze_reviews(csv_file, custom_stop_words):
+    if 'page' not in st.session_state:
+        st.session_state['page'] = None
+    if (st.session_state['page'] != csv_file):
+        st.session_state['filter_pressed'] = False
+        st.session_state['start_date'] = date(2023, 1, 1)
+        st.session_state['end_date'] = date(2023, 1, 1)
+        st.session_state['rating_filter'] = "All"
+        st.session_state['version'] = "All"
     nltk.download('punkt')
     nltk.download('stopwords')
     nltk.download('wordnet')
@@ -29,6 +37,7 @@ def analyze_reviews(csv_file, custom_stop_words):
         dfversion['review_date']).dt.strftime('%d/%m/%Y')
 
     st.session_state['run_Model'] = False
+    st.session_state['page'] = csv_file
 
     if 'filter_pressed' not in st.session_state:
         st.session_state['filter_pressed'] = False
