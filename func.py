@@ -305,14 +305,8 @@ def analyze_reviews(csv_file, custom_stop_words):
 
                     tokenizer = AutoTokenizer.from_pretrained(
                         'nlptown/bert-base-multilingual-uncased-sentiment')
-
-                    @st.cache_resource  # 👈 Add the caching decorator
-                    def load_model():
-                        model = AutoModelForSequenceClassification.from_pretrained(
-                            'nlptown/bert-base-multilingual-uncased-sentiment')
-                        return model
-
-                    model = load_model()
+                    model = AutoModelForSequenceClassification.from_pretrained(
+                        'nlptown/bert-base-multilingual-uncased-sentiment')
 
                     ratings = []
                     review_lengths = []
