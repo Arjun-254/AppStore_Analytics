@@ -53,7 +53,7 @@ nltk.download('wordnet')
 @st.cache_resource(ttl=86400)
 def get_reviews():
     g_reviews = reviews_all(
-        "com.hsl.investright",
+        "com.msf.angelmobile",
         sleep_milliseconds=0,
         lang='en',
         country='us',
