@@ -6,14 +6,13 @@ st.set_page_config(
     page_icon="📊",
 )
 
-st.title("Analytics Dashboard 👋")
+st.title("App Analytics Dashboard")
 
 st.sidebar.success("Select an option above.")
 
 st.info(
     """
-    Investright is updated Real-Time, other apps are
-    updated till July 3rd,2023.Data starts from January 1st,2023.
+    InvestRight and Sky display daily updated reviews, while the remaining apps show reviews limited to the current calendar year.
 """
 )
 # hide = """

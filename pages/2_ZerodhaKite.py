@@ -71,6 +71,6 @@ df.drop('developer_response', axis=1, inplace=True)
 df.drop('developer_response_date', axis=1, inplace=True)
 df = df[df['review_date'].dt.year == date.today().year]
 
-stop_words = {'angel', 'one', 'please',
+stop_words = {'zerodha', 'kite', 'please',
               'able', 'bank', 'app', 'good', 'nice', 'best'}
 analyze_reviews(df, stop_words)

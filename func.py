@@ -19,8 +19,8 @@ def analyze_reviews(df, custom_stop_words):
         st.session_state['page'] = None
     if (st.session_state['page'] != custom_stop_words):
         st.session_state['filter_pressed'] = False
-        st.session_state['start_date'] = date(2023, 1, 1)
-        st.session_state['end_date'] = date(2023, 1, 1)
+        st.session_state['start_date'] = datetime.now().date()
+        st.session_state['end_date'] = datetime.now().date()
         st.session_state['rating_filter'] = "All"
         st.session_state['version'] = "All"
     nltk.download('punkt')
@@ -44,11 +44,11 @@ def analyze_reviews(df, custom_stop_words):
 
     # Check if the start_date key exists in session_state, if not initialize it
     if 'start_date' not in st.session_state:
-        st.session_state['start_date'] = date(2023, 1, 1)
+        st.session_state['start_date'] = datetime.now().date()
 
     # Check if the end_date key exists in session_state, if not initialize it
     if 'end_date' not in st.session_state:
-        st.session_state['end_date'] = date(2023, 1, 1)
+        st.session_state['end_date'] = datetime.now().date()
 
     # Check if the rating_filter key exists in session_state, if not initialize it
     if 'rating_filter' not in st.session_state:
@@ -62,9 +62,9 @@ def analyze_reviews(df, custom_stop_words):
     st.title('Custom Search by Date Range')
     pd.set_option('display.width', 1000)
     start_date = st.date_input('Select start date', value=st.session_state['start_date'], min_value=date(
-        2023, 1, 1), max_value=date(2023, 7, 3))
+        2023, 1, 1), max_value=datetime.now().date())
     end_date = st.date_input('Select end date', value=st.session_state['end_date'], min_value=date(
-        2023, 1, 1), max_value=date(2023, 7, 3))
+        2023, 1, 1), max_value=datetime.now().date())
     start_date = pd.to_datetime(start_date)
     end_date = pd.to_datetime(end_date)
     df['review_date'] = pd.to_datetime(df['review_date'])
