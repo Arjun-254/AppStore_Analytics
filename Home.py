@@ -16,3 +16,10 @@ st.info(
     updated till July 3rd,2023.Data starts from January 1st,2023.
 """
 )
+# hide = """
+#     <style>
+#         #MainMenu {visibility: hidden;}
+#         footer {visibility: hidden;}
+#     </style>
+# """
+# st.markdown(hide, unsafe_allow_html=True)

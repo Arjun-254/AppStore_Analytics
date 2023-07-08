@@ -22,18 +22,13 @@ nltk.download('stopwords')
 nltk.download('wordnet')
 
 
-today = date.today()
-try:
-    g_reviews = joblib.load(f"cached_reviews_{today}.pkl")
-except FileNotFoundError:
-    g_reviews = reviews_all(
-        "com.hsl.investright",
-        sleep_milliseconds=0,  # defaults to 0
-        lang='en',  # defaults to 'en'
-        country='us',  # defaults to 'us'
-        sort=Sort.NEWEST,  # defaults to Sort.NEWEST
-    )
-    joblib.dump(g_reviews, f"cached_reviews_{today}.pkl")
+g_reviews = reviews_all(
+    "com.hsl.investright",
+    sleep_milliseconds=0,  # defaults to 0
+    lang='en',  # defaults to 'en'
+    country='us',  # defaults to 'us'
+    sort=Sort.NEWEST,  # defaults to Sort.NEWEST
+)
 
 
 g_df = pd.DataFrame(np.array(g_reviews), columns=['review'])
