@@ -12,7 +12,7 @@ st.sidebar.success("Select an option above.")
 
 st.info(
     """
-    InvestRight and Sky display daily updated reviews, while the remaining apps show reviews limited to the current calendar year.
+    InvestRight and Sky display all daily updated reviews, while the remaining apps show the last 5000 reviews.
 """
 )
 # hide = """

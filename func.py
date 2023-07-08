@@ -15,6 +15,14 @@ import plotly.graph_objects as go
 
 
 def analyze_reviews(df, custom_stop_words):
+    hide = """
+        <style>
+            #MainMenu {visibility: hidden;}
+            footer {visibility: hidden;}
+        </style>
+    """
+    st.markdown(hide, unsafe_allow_html=True)
+
     if 'page' not in st.session_state:
         st.session_state['page'] = None
     if (st.session_state['page'] != custom_stop_words):
@@ -59,12 +67,13 @@ def analyze_reviews(df, custom_stop_words):
         st.session_state['version'] = "All"
 
     # Analytics date window wise
+    min_review_date = pd.to_datetime(df['review_date']).min().date()
     st.title('Custom Search by Date Range')
     pd.set_option('display.width', 1000)
-    start_date = st.date_input('Select start date', value=st.session_state['start_date'], min_value=date(
-        2023, 1, 1), max_value=datetime.now().date())
-    end_date = st.date_input('Select end date', value=st.session_state['end_date'], min_value=date(
-        2023, 1, 1), max_value=datetime.now().date())
+    start_date = st.date_input(
+        'Select start date', value=st.session_state['start_date'],  min_value=min_review_date, max_value=datetime.now().date())
+    end_date = st.date_input(
+        'Select end date', value=st.session_state['end_date'], min_value=min_review_date, max_value=datetime.now().date())
     start_date = pd.to_datetime(start_date)
     end_date = pd.to_datetime(end_date)
     df['review_date'] = pd.to_datetime(df['review_date'])

@@ -27,7 +27,7 @@ st.markdown('<h1 style="font-size: 70px; color: #9347ED;">Customer Review Analyt
 
 @st.cache_resource(ttl=86400)
 def get_reviews():
-    MAX_REVIEWS = 10000
+    MAX_REVIEWS = 5000
     count = 200
     g_reviews = []
     continuation_token = None
@@ -69,7 +69,7 @@ df = g_df2
 df.drop('review_title', axis=1, inplace=True)
 df.drop('developer_response', axis=1, inplace=True)
 df.drop('developer_response_date', axis=1, inplace=True)
-df = df[df['review_date'].dt.year == date.today().year]
+
 
 stop_words = {'grow', 'groww', 'growww', 'please',
               'able', 'bank', 'app', 'good', 'nice', 'best'}
