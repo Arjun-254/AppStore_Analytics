@@ -52,13 +52,26 @@ nltk.download('wordnet')
 # Set the cache expiry time to 24 hours (86400 seconds)
 @st.cache_resource(ttl=86400)
 def get_reviews():
-    g_reviews = reviews_all(
-        "com.msf.angelmobile",
-        sleep_milliseconds=0,
-        lang='en',
-        country='us',
-        sort=Sort.NEWEST
-    )
+    MAX_REVIEWS = 30000
+    count = 200
+    g_reviews = []
+    continuation_token = None
+    while len(g_reviews) < MAX_REVIEWS:
+        reviews_batch, continuation_token = reviews(
+            'com.msf.angelmobile',
+            lang='en',
+            country='us',
+            sort=Sort.NEWEST,
+            count=count,
+            continuation_token=continuation_token
+        )
+        g_reviews.extend(reviews_batch)
+        if continuation_token is None:
+            break
+
+        # Adjust the remaining count based on the already scraped reviews
+        remaining_reviews = MAX_REVIEWS - len(g_reviews)
+        count = min(remaining_reviews, count)
     return g_reviews
 
 
