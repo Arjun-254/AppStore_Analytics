@@ -49,7 +49,7 @@ nltk.download('stopwords')
 nltk.download('wordnet')
 
 
-# Set the cache expiry time to 24 hours (86400 seconds)
+# Set the cache expiry time to 24 hours
 @st.cache_resource(ttl=86400)
 def get_reviews():
     MAX_REVIEWS = 30000
@@ -94,6 +94,7 @@ df = g_df2
 df.drop('review_title', axis=1, inplace=True)
 df.drop('developer_response', axis=1, inplace=True)
 df.drop('developer_response_date', axis=1, inplace=True)
+df = df[df['review_date'].dt.year == date.today().year]
 
 # To get the first occurence of new app release in reviews to pinpoint update
 dfversion = df[['appVersion', 'review_date']]
