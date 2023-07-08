@@ -22,13 +22,20 @@ nltk.download('stopwords')
 nltk.download('wordnet')
 
 
-g_reviews = reviews_all(
-    "com.hsl.investright",
-    sleep_milliseconds=0,  # defaults to 0
-    lang='en',  # defaults to 'en'
-    country='us',  # defaults to 'us'
-    sort=Sort.NEWEST,  # defaults to Sort.NEWEST
-)
+# Set the cache expiry time to 24 hours (86400 seconds)
+@st.cache_resource(ttl=86400)
+def get_reviews():
+    g_reviews = reviews_all(
+        "com.hsl.investright",
+        sleep_milliseconds=0,
+        lang='en',
+        country='us',
+        sort=Sort.NEWEST
+    )
+    return g_reviews
+
+
+g_reviews = get_reviews()
 
 
 g_df = pd.DataFrame(np.array(g_reviews), columns=['review'])
