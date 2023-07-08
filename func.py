@@ -14,10 +14,10 @@ import joblib
 import plotly.graph_objects as go
 
 
-def analyze_reviews(csv_file, custom_stop_words):
+def analyze_reviews(df, custom_stop_words):
     if 'page' not in st.session_state:
         st.session_state['page'] = None
-    if (st.session_state['page'] != csv_file):
+    if (st.session_state['page'] != custom_stop_words):
         st.session_state['filter_pressed'] = False
         st.session_state['start_date'] = date(2023, 1, 1)
         st.session_state['end_date'] = date(2023, 1, 1)
@@ -27,8 +27,8 @@ def analyze_reviews(csv_file, custom_stop_words):
     nltk.download('stopwords')
     nltk.download('wordnet')
 
-    df = pd.read_csv(csv_file)
-    df.drop(columns=['Unnamed: 0'], inplace=True)
+    # df = pd.read_csv(csv_file)
+    # df.drop(columns=['Unnamed: 0'], inplace=True)
 
     # To get the first occurence of new app release in reviews to pinpoint update
     dfversion = df[['appVersion', 'review_date']]
@@ -37,7 +37,7 @@ def analyze_reviews(csv_file, custom_stop_words):
         dfversion['review_date']).dt.strftime('%d/%m/%Y')
 
     st.session_state['run_Model'] = False
-    st.session_state['page'] = csv_file
+    st.session_state['page'] = custom_stop_words
 
     if 'filter_pressed' not in st.session_state:
         st.session_state['filter_pressed'] = False
