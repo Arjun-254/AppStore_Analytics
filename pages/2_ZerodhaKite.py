@@ -27,13 +27,13 @@ st.markdown('<h1 style="font-size: 70px; color: #9347ED;">Customer Review Analyt
 
 @st.cache_resource(ttl=86400)
 def get_reviews():
-    MAX_REVIEWS = 30000
+    MAX_REVIEWS = 10000
     count = 200
     g_reviews = []
     continuation_token = None
     while len(g_reviews) < MAX_REVIEWS:
         reviews_batch, continuation_token = reviews(
-            'com.msf.angelmobile',
+            'com.zerodha.kite3',
             lang='en',
             country='us',
             sort=Sort.NEWEST,
