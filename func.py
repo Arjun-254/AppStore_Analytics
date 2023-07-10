@@ -123,43 +123,13 @@ def analyze_reviews(df, custom_stop_words):
             )
             st.altair_chart(chart, use_container_width=True)
 
-        # version wise reviews
-        st.title('Review Counts by Version')
-        versions = df['appVersion'].value_counts().sort_index()
-        fig = go.Figure(data=[go.Bar(x=versions.index, y=versions.values)])
-        fig.update_layout(
-            title='Review counts by App Version',
-            xaxis=dict(title='App Version'),
-            yaxis=dict(title='Review Count'),
-            barmode='relative'
-        )
-        st.plotly_chart(
-            fig, config={'displayModeBar': False}, use_container_width=True)
-
-        # version release
-        dfversion = dfversion.sort_values('appVersion', ascending=False)
-        dfversion = dfversion.set_index('appVersion')
-        transposed_df = dfversion.T  # Transpose the DataFrame
-        st.dataframe(transposed_df)
-
-        # REVIEW TRAFFIC
+        # Review traffic
         df['review_date'] = pd.to_datetime(df['review_date'])
         df.set_index('review_date', inplace=True)
-        review_counts = df['review_id'].resample('D').count()
+        review_counts = df.resample('D').size()
         st.title('Review Distribution Over Time')
         st.subheader('Number of Reviews')
         st.line_chart(review_counts)
-
-        # # Custom Search by Date Range
-        # st.title('Custom Search by Date Range')
-        # pd.set_option('display.width', 1000)
-        # start_date = st.date_input('Select start date')
-        # end_date = st.date_input('Select end date')
-        # start_date = pd.to_datetime(start_date)
-        # end_date = pd.to_datetime(end_date)
-        # df_sorted = df.sort_index()  # Sort the DataFrame by the index
-        # selected_reviews = df_sorted.loc[start_date:end_date]
-        # st.dataframe(selected_reviews)
 
         st.warning(
             "Star and Version filters are applied after this point")
@@ -343,7 +313,7 @@ def analyze_reviews(df, custom_stop_words):
                 st.warning(
                     "Sentiment analysis can only be calculated for a time interval of 7 days.")
 
-            del df_cleaned, unique_versions, words, cleaned_words, bow, bow2, bow3, word_freq, word_pairs, trigrams
+            del words, cleaned_words, bow, bow2, bow3, word_freq, word_pairs, trigrams
         else:
             st.warning(
                 "Please select a different date range to filter the reviews (Not enough data for analysis)")

@@ -41,7 +41,7 @@ def get_reviews():
     a_df2.fillna("Apple App Store", inplace=True)
     df = a_df2
     df = df.sort_values('review_date', ascending=False)
-
+    df.drop('developer_response', axis=1, inplace=True)
     df.drop('review_title', axis=1, inplace=True)
     return df
 

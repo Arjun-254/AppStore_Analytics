@@ -19,9 +19,9 @@ from func import analyze_reviews
 # Streamlit app to be full screen
 # st.set_page_config(layout="wide")
 
-nltk.download('punkt')
-nltk.download('stopwords')
-nltk.download('wordnet')
+# nltk.download('punkt')
+# nltk.download('stopwords')
+# nltk.download('wordnet')
 
 st.markdown('<h1 style="font-size: 70px; color: #1C4CD6;"> HDFC InvestRight </h1>',
             unsafe_allow_html=True)
@@ -48,6 +48,7 @@ def get_reviews():
     df = df.sort_values('review_date', ascending=False)
 
     df.drop('review_title', axis=1, inplace=True)
+    df.drop('developer_response', axis=1, inplace=True)
     return df
 
 
