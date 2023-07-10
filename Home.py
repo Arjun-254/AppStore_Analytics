@@ -6,13 +6,13 @@ st.set_page_config(
     page_icon="📊",
 )
 
-st.title("App Analytics Dashboard")
+st.title("Apple App Store Analytics Dashboard")
 
 st.sidebar.success("Select an option above.")
 
 st.info(
     """
-    InvestRight and Sky display all daily updated reviews, while the remaining apps show the last 5000 reviews.
+    InvestRight and Sky display all daily updated reviews, while the remaining apps show the latest 5000 reviews
 """
 )
 # hide = """

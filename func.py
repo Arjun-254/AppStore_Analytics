@@ -1,4 +1,5 @@
 from google_play_scraper import app, Sort, reviews, reviews_all
+from transformers import AutoTokenizer, AutoModelForSequenceClassification
 import pandas as pd
 import numpy as np
 from datetime import date, datetime
@@ -30,19 +31,6 @@ def analyze_reviews(df, custom_stop_words):
         st.session_state['start_date'] = datetime.now().date()
         st.session_state['end_date'] = datetime.now().date()
         st.session_state['rating_filter'] = "All"
-        st.session_state['version'] = "All"
-    nltk.download('punkt')
-    nltk.download('stopwords')
-    nltk.download('wordnet')
-
-    # df = pd.read_csv(csv_file)
-    # df.drop(columns=['Unnamed: 0'], inplace=True)
-
-    # To get the first occurence of new app release in reviews to pinpoint update
-    dfversion = df[['appVersion', 'review_date']]
-    dfversion = dfversion.drop_duplicates(subset='appVersion', keep='last')
-    dfversion['review_date'] = pd.to_datetime(
-        dfversion['review_date']).dt.strftime('%d/%m/%Y')
 
     st.session_state['run_Model'] = False
     st.session_state['page'] = custom_stop_words
@@ -62,18 +50,17 @@ def analyze_reviews(df, custom_stop_words):
     if 'rating_filter' not in st.session_state:
         st.session_state['rating_filter'] = "All"
 
-    # Check if the version key exists in session_state, if not initialize it
-    if 'version' not in st.session_state:
-        st.session_state['version'] = "All"
-
     # Analytics date window wise
     min_review_date = pd.to_datetime(df['review_date']).min().date()
     st.title('Custom Search by Date Range')
     pd.set_option('display.width', 1000)
-    start_date = st.date_input(
-        'Select start date', value=st.session_state['start_date'],  min_value=min_review_date, max_value=datetime.now().date())
-    end_date = st.date_input(
-        'Select end date', value=st.session_state['end_date'], min_value=min_review_date, max_value=datetime.now().date())
+    col1, col2 = st.columns(2)
+    with col1:
+        start_date = st.date_input(
+            'Select start date', value=st.session_state['start_date'],  min_value=min_review_date, max_value=datetime.now().date())
+    with col2:
+        end_date = st.date_input(
+            'Select end date', value=st.session_state['end_date'], min_value=min_review_date, max_value=datetime.now().date())
     start_date = pd.to_datetime(start_date)
     end_date = pd.to_datetime(end_date)
     df['review_date'] = pd.to_datetime(df['review_date'])
@@ -87,16 +74,6 @@ def analyze_reviews(df, custom_stop_words):
     delta = end_date-start_date
     day_interval = delta.days+1
 
-    # App Version Filter
-    df_cleaned = df.dropna(subset=['appVersion'])
-    unique_versions = df_cleaned['appVersion'].drop_duplicates().tolist()
-    unique_versions.append("All")
-    unique_versions = df_cleaned['appVersion'].drop_duplicates()
-    if len(unique_versions) > 0:
-        unique_versions = pd.Series(["All"]+unique_versions.tolist())
-    selected_version = st.selectbox(
-        'Select a Version:', unique_versions.tolist(), index=0)
-
     filter_button = st.button('Filter reviews')
 
     # Check if the button is pressed and the dataframe is not empty
@@ -107,7 +84,6 @@ def analyze_reviews(df, custom_stop_words):
     st.session_state['start_date'] = start_date
     st.session_state['end_date'] = end_date
     st.session_state['rating_filter'] = rating_options
-    st.session_state['version'] = selected_version
 
     # Use the filter state in your application
     if st.session_state['filter_pressed']:
@@ -196,12 +172,6 @@ def analyze_reviews(df, custom_stop_words):
             df = df[df["rating"] <= 4]
         else:
             df = df[df["rating"] == 5]
-
-    # Version Review Filtering
-        if selected_version != "All":
-            df = df[df['appVersion'] == selected_version]
-        else:
-            df = df
 
         comments = " ".join(df['review_description'])
         words = word_tokenize(comments)
@@ -318,6 +288,7 @@ def analyze_reviews(df, custom_stop_words):
             search_word = st.text_input('Enter a word to search in reviews')
             selected_reviews = dfsearch[dfsearch['review_description'].str.contains(
                 search_word, case=True)]
+            selected_reviews = selected_reviews.reset_index(drop=True)
             st.dataframe(selected_reviews)
 
             ########   Sentiment Analysis Start   ##############
