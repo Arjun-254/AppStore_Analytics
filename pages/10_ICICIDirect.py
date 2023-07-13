@@ -18,7 +18,7 @@ from func import analyze_reviews
 # Streamlit app to be full screen
 # st.set_page_config(layout="wide")
 
-st.markdown('<h1 style="font-size: 70px; color: #E3142D;"> HDFC Securities </h1>',
+st.markdown('<h1 style="font-size: 70px; color: #E3142D;"> ICICI Direct </h1>',
             unsafe_allow_html=True)
 st.markdown('<h1 style="font-size: 70px; color: #9347ED;">Customer Review Analytics </h1>',
             unsafe_allow_html=True)
