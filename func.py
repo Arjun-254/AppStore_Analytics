@@ -261,6 +261,19 @@ def analyze_reviews(df, custom_stop_words):
             selected_reviews = selected_reviews.reset_index(drop=True)
             st.dataframe(selected_reviews)
 
+            # Download Data
+            def convert_df(df):
+                return df.to_csv().encode('utf-8')
+
+            csv = convert_df(dfsearch)
+
+            st.download_button(
+                label="Download all available review data as CSV",
+                data=csv,
+                file_name='Reviews.csv',
+                mime='text/csv',
+            )
+
             ########   Sentiment Analysis Start   ##############
             if st.button('Run Sentiment Analytics'):
                 st.session_state['run_Model'] = True
