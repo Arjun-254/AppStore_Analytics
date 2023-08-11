@@ -14,6 +14,7 @@ import altair as alt
 import joblib
 import plotly.graph_objects as go
 from func import analyze_reviews
+from version import version_info
 
 st.markdown('<h1 style="font-size: 70px; color: #E3142D;"> Angel One </h1>',
             unsafe_allow_html=True)
@@ -46,3 +47,7 @@ df = get_reviews()
 stop_words = {'angel', 'one', 'please',
               'able', 'bank', 'app', 'good', 'nice', 'best'}
 analyze_reviews(df, stop_words)
+
+st.divider()
+version_info(
+    'https://apps.apple.com/in/app/angel-one-stocks-mutual-fund/id1060530981', 3)

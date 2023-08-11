@@ -14,6 +14,7 @@ import altair as alt
 import joblib
 import plotly.graph_objects as go
 from func import analyze_reviews
+from version import version_info
 
 # Streamlit app to be full screen
 # st.set_page_config(layout="wide")
@@ -51,3 +52,6 @@ df = get_reviews()
 stop_words = {'dhan', 'please',
               'able', 'bank', 'app', 'good', 'nice', 'best'}
 analyze_reviews(df, stop_words)
+st.divider()
+version_info(
+    'https://apps.apple.com/in/app/dhan-stock-market-trading-app/id1575318726', 4)

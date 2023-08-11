@@ -75,7 +75,7 @@ def analyze_reviews(df, custom_stop_words):
     day_interval = delta.days+1
 
     filter_button = st.button('Filter reviews')
-
+    st.divider()
     # Check if the button is pressed and the dataframe is not empty
     if filter_button and not df.empty:
         st.session_state['filter_pressed'] = True
