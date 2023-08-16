@@ -16,6 +16,11 @@ import plotly.graph_objects as go
 from func import analyze_reviews
 from version import version_info
 
+
+nltk.download('punkt')
+nltk.download('stopwords')
+nltk.download('wordnet')
+
 st.markdown('<h1 style="font-size: 70px; color: #E3142D;"> Angel One </h1>',
             unsafe_allow_html=True)
 st.markdown('<h1 style="font-size: 70px; color: #9347ED;">Customer Review Analytics</h1>',

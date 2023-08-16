@@ -16,6 +16,9 @@ import plotly.graph_objects as go
 from func import analyze_reviews
 from version import version_info
 
+nltk.download('punkt')
+nltk.download('stopwords')
+nltk.download('wordnet')
 # Streamlit app to be full screen
 # st.set_page_config(layout="wide")
 

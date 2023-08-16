@@ -19,6 +19,10 @@ from version import version_info
 # Streamlit app to be full screen
 # st.set_page_config(layout="wide")
 
+nltk.download('punkt')
+nltk.download('stopwords')
+nltk.download('wordnet')
+
 st.markdown('<h1 style="font-size: 70px; color: #E3142D;"> Zerodha Kite </h1>',
             unsafe_allow_html=True)
 st.markdown('<h1 style="font-size: 70px; color: #9347ED;">Customer Review Analytics </h1>',
